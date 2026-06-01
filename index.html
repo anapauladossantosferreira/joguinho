@@ -15,25 +15,27 @@
       color: gold;
       text-shadow: 2px 2px 5px #000;
     }
-    .screen {
-      width: 320px;
-      height: 180px;
+    .roleta {
+      display: flex;
+      justify-content: center;
       margin: 20px auto;
-      background: #222;
+      width: 360px;
       border: 4px solid gold;
       border-radius: 10px;
+      background: #222;
+      box-shadow: 0 0 20px gold;
+      overflow: hidden;
+    }
+    .slot {
+      width: 100px;
+      height: 100px;
+      font-size: 50px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      font-weight: bold;
-      box-shadow: 0 0 20px gold;
-    }
-    .icons {
-      font-size: 50px;
-      margin-bottom: 10px;
-      transition: 0.2s;
+      margin: 10px;
+      background: #333;
+      border-radius: 8px;
     }
     button {
       padding: 12px 25px;
@@ -55,51 +57,64 @@
       font-size: 20px;
       color: lightgreen;
     }
+    #resultado {
+      margin-top: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>🎰 Roleta Cassino 🎰</h1>
-  <div class="screen" id="screen">
-    <div class="icons" id="icons">🎲</div>
-    <div id="resultado">Clique em Girar!</div>
+  <div class="roleta">
+    <div class="slot" id="slot1">🎲</div>
+    <div class="slot" id="slot2">🎴</div>
+    <div class="slot" id="slot3">🎰</div>
   </div>
   <button onclick="girar()">Girar</button>
   <div class="saldo" id="saldo">Saldo: R$ 100</div>
+  <div id="resultado">Clique em Girar!</div>
 
   <script>
     let saldo = 100;
-    let icones = ["🎲", "🎴", "🎰", "♠️", "♥️", "♦️", "♣️"];
+    let icones = ["🎲","🎴","🎰","♠️","♥️","♦️","♣️","🍒","🔔","⭐"];
 
     function girar() {
-      let resultado = Math.random() < 0.5 ? "Perdeu" : "Ganhou";
-      let valor = Math.floor(Math.random() * 50) + 10;
-
-      let sorteioFinal = icones[Math.floor(Math.random() * icones.length)];
+      let rodadas = 20; // quantas vezes gira
       let i = 0;
-      let rodadas = 20; // quantas vezes a roleta gira
       let intervalo = setInterval(() => {
-        document.getElementById("icons").textContent = icones[i % icones.length];
+        document.getElementById("slot1").textContent = icones[Math.floor(Math.random()*icones.length)];
+        document.getElementById("slot2").textContent = icones[Math.floor(Math.random()*icones.length)];
+        document.getElementById("slot3").textContent = icones[Math.floor(Math.random()*icones.length)];
         i++;
         if (i > rodadas) {
           clearInterval(intervalo);
-          document.getElementById("icons").textContent = sorteioFinal;
-
-          if (resultado === "Ganhou") {
-            saldo += valor;
-            document.getElementById("resultado").textContent = `🎉 Você ganhou R$${valor}!`;
-          } else {
-            saldo -= valor;
-            document.getElementById("resultado").textContent = `💸 Você perdeu R$${valor}!`;
-          }
-
-          if (saldo <= 0) {
-            document.getElementById("resultado").textContent = "Fim de jogo! Saldo zerado.";
-            saldo = 0;
-          }
-
-          document.getElementById("saldo").textContent = `Saldo: R$ ${saldo}`;
+          verificarResultado();
         }
       }, 100); // velocidade da roleta
+    }
+
+    function verificarResultado() {
+      let s1 = document.getElementById("slot1").textContent;
+      let s2 = document.getElementById("slot2").textContent;
+      let s3 = document.getElementById("slot3").textContent;
+
+      if (s1 === s2 && s2 === s3) {
+        let ganho = Math.floor(Math.random()*50)+20;
+        saldo += ganho;
+        document.getElementById("resultado").textContent = `🎉 JACKPOT! Você ganhou R$${ganho}!`;
+      } else {
+        let perda = Math.floor(Math.random()*30)+10;
+        saldo -= perda;
+        document.getElementById("resultado").textContent = `💸 Você perdeu R$${perda}!`;
+      }
+
+      if (saldo <= 0) {
+        saldo = 0;
+        document.getElementById("resultado").textContent = "Fim de jogo! Saldo zerado.";
+      }
+
+      document.getElementById("saldo").textContent = `Saldo: R$ ${saldo}`;
     }
   </script>
 </body>
