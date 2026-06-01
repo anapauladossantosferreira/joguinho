@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Cassino</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle, #111, #000);
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: gold;
+      text-shadow: 2px 2px 5px #000;
+    }
+    .screen {
+      width: 320px;
+      height: 180px;
+      margin: 20px auto;
+      background: #222;
+      border: 4px solid gold;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 0 20px gold;
+    }
+    .icons {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      background: crimson;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: darkred;
+      transform: scale(1.05);
+    }
+    .saldo {
+      margin-top: 20px;
+      font-size: 20px;
+      color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎰 Mini Cassino 🎰</h1>
+  <div class="screen" id="screen">
+    <div class="icons">🎲 🎴 🎰</div>
+    <div id="resultado">Clique em Jogar!</div>
+  </div>
+  <button onclick="jogar()">Jogar</button>
+  <div class="saldo" id="saldo">Saldo: R$ 100</div>
+
+  <!-- Sons -->
+  <audio id="somGanho" src="coin-win.mp3"></audio>
+  <audio id="somPerda" src="lose-sound.mp3"></audio>
+  <audio id="somRoleta" src="roulette-spin.mp3"></audio>
+
+  <script>
+    let saldo = 100;
+
+    function jogar() {
+      // toca som de roleta girando
+      document.getElementById("somRoleta").play();
+
+      let resultado = Math.random() < 0.5 ? "Perdeu" : "Ganhou";
+      let valor = Math.floor(Math.random() * 50) + 10;
+
+      let icones = ["🎲", "🎴", "🎰", "♠️", "♥️", "♦️", "♣️"];
+      let sorteio = icones[Math.floor(Math.random() * icones.length)];
+
+      if (resultado === "Ganhou") {
+        saldo += valor;
+        document.getElementById("resultado").textContent = `🎉 Você ganhou R$${valor}!`;
+        document.getElementById("somGanho").play();
+      } else {
+        saldo -= valor;
+        document.getElementById("resultado").textContent = `💸 Você perdeu R$${valor}!`;
+        document.getElementById("somPerda").play();
+      }
+
+      document.querySelector(".icons").textContent = sorteio;
+
+      if (saldo <= 0) {
+        document.getElementById("resultado").textContent = "Fim de jogo! Saldo zerado.";
+        saldo = 0;
+      }
+
+      document.getElementById("saldo").textContent = `Saldo: R$ ${saldo}`;
+    }
+  </script>
+</body>
+</html>
 
